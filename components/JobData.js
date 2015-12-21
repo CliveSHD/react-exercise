@@ -7,16 +7,22 @@ export default class JobData extends Component {
     
     this.renderJobDetails = this.renderJobDetails.bind(this);
     this.count = this.count.bind(this);
+    this.check = this.check.bind(this);
   }
   render() {
     const jobData = this.props.jobData;
     const jobDetails = this.props.jobData.jobDetails;
     return (
       <li>
-        <input type="checkbox" />
-        {jobData.department}
-        <span>&#711;</span>
-        <span>{this.count(jobData.jobDetails)}</span>
+        <div className="checkbox">
+        <input type="checkbox" id={jobData.id.toString()}
+          ref={ c => {if(c!=null) { c.checked=jobData.selected }} }
+          onClick={e => this.check(e, jobData)}/>
+          <label htmlFor={jobData.id.toString()}></label>
+        </div>
+        <span className="department"><strong>{jobData.department}</strong></span>
+        <span className="down-arrow"></span>
+        <span className="number sum">{this.count(jobDetails)}</span>
         <ul>
           {jobDetails.map(this.renderJobDetails)}
         </ul>
@@ -32,5 +38,8 @@ export default class JobData extends Component {
     return jobDetails.reduce(function(pre, cur) {
       return pre + cur.num;
     }, 0);
+  }
+  check(e, jobData) {
+    this.props.changeSelect(jobData.id);
   }
 }
